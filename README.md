@@ -1,6 +1,7 @@
-# reactjs.org
+# react-docs-typescript
 
-This repo contains the source code and documentation powering [reactjs.org](https://reactjs.org/).
+This repo contains the React documentation **with typescript code**.
+Exactly same format and structure as [reactjs.org](https://reactjs.org/)
 
 ## Getting started
 
