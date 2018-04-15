@@ -86,7 +86,7 @@ const Header = ({location}: {location: Location}) => (
                 border: 0,
               },
             }}>
-            React
+            React Typescript
           </span>
         </Link>
 
@@ -123,16 +123,16 @@ const Header = ({location}: {location: Location}) => (
             title="Tutorial"
             to="/tutorial/tutorial.html"
           />
-          <HeaderLink
+          {false && <HeaderLink
             isActive={location.pathname.includes('/community/')}
             title="Community"
             to="/community/support.html"
-          />
-          <HeaderLink
+          />}
+          {false && <HeaderLink
             isActive={location.pathname.includes('/blog')}
             title="Blog"
             to="/blog/"
-          />
+          />}
         </nav>
 
         <DocSearch />
@@ -184,7 +184,7 @@ const Header = ({location}: {location: Location}) => (
                 borderRadius: 15,
               },
             }}
-            href="https://github.com/facebook/react/"
+            href="https://github.com/edgarinvillegas/react-docs-typescript"
             target="_blank"
             rel="noopener">
             GitHub
