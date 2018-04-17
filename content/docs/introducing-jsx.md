@@ -8,7 +8,7 @@ next: rendering-elements.html
 
 Consider this variable declaration:
 
-```js
+```typescript
 const element = <h1>Hello, world!</h1>;
 ```
 
