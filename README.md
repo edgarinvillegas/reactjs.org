@@ -56,13 +56,24 @@ The documentation is divided into several sections with a different tone and pur
 1. Follow GitHub's instructions.
 1. If possible, include screenshots of visual changes. A Netlify build will also be automatically created once you make your PR so other people can see your change.
 
-## Translation
-
-If you are interesting in translating `reactjs.org`, please join the Crowdin.
-
-* [Crowdin - React](https://crowdin.com/project/react)
 
 ## Troubleshooting
 
 - `yarn reset` to clear the local cache
+
+#### Windows
+
+If you get an error related with gatsby during installation, follow these steps:
+  - Open Power Shell as admin
+  - Execute `npm install --global --production windows-build-tools`
+  - Wait until it finishes and retry `yarn`
+
+#### Linux
+
+"Error while loading shared libraries: libpng12.so.0: cannot open shared object file: No such file or directory"
+
+Solution: install the libpng12-0 package.
+
+Follow these steps (Debian):
+   - `dpkg -i libpng12-0_1.2.50-2+deb8u3_amd64.deb`
 
