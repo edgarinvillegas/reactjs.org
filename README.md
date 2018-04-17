@@ -11,11 +11,11 @@ Exactly same format and structure as [reactjs.org](https://reactjs.org/)
 1. Node: install version 8.4 or greater
 1. Yarn: See [Yarn website for installation instructions](https://yarnpkg.com/lang/en/docs/install/)
 1. A fork of the repo (for any contributions)
-1. A clone of the [reactjs.org repo](https://github.com/reactjs/reactjs.org) on your local machine
+1. A clone of the [react-docs-typescript repo](https://github.com/edgarinvillegas/react-docs-typescript) on your local machine
 
 ### Installation
 
-1. `cd reactjs.org` to go into the project root
+1. `cd react-docs-typescript` to go into the project root
 1. `yarn` to install the website's npm dependencies
 
 ### Running locally
