@@ -13,7 +13,7 @@
     - id: hello-world
       title: Hello World (TS✓)
     - id: introducing-jsx
-      title: Introducing JSX
+      title: Introducing JSX (10%)
     - id: rendering-elements
       title: Rendering Elements
     - id: components-and-props
