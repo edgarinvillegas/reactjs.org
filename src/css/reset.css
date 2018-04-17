@@ -42,8 +42,4 @@ pre, code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.gatsby-code-typescript {
-  /* background-color: darkred; */
-  background: url(/typescript-logo-transparent.png) no-repeat;
-  background-position: right bottom;
-}
+

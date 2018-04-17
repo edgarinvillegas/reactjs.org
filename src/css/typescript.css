@@ -1,0 +1,8 @@
+/*
+ TODO(edgarinvillegas): Move this to a different css file
+*/
+.gatsby-code-typescript {
+    /* Points / actually points to /static*/
+    background: url(/typescript-logo-transparent.png) no-repeat;
+    background-position: right bottom;
+}

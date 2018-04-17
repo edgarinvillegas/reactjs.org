@@ -21,6 +21,7 @@ import '../prism-styles';
 import 'glamor/reset';
 import 'css/reset.css';
 import 'css/algolia.css';
+import 'css/typescript.css';
 
 type Props = {
   children: Function,
