@@ -18,9 +18,8 @@ The smallest React example looks like this:
 
 ```typescript
 ReactDOM.render(
-  let id: string; // TODO: Just a ts example. Remove
   <h1>Hello, React with TS!</h1>,
-  document.getElementById(id)
+  document.getElementById('root')
 );
 ```
 
