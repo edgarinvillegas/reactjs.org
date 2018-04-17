@@ -16,10 +16,11 @@ The easiest way to get started with React is to use [this Hello World example co
 
 The smallest React example looks like this:
 
-```js
+```typescript
 ReactDOM.render(
+  let id: string; // TODO: Just a ts example. Remove
   <h1>Hello, world!</h1>,
-  document.getElementById('root')
+  document.getElementById(id)
 );
 ```
 
