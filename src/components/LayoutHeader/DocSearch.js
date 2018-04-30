@@ -25,6 +25,12 @@ class DocSearch extends Component<{}, State> {
         apiKey: '36221914cce388c46d0420343e0bb32e',
         indexName: 'react',
         inputSelector: '#algolia-doc-search',
+        transformData: function (hits) {
+          return hits.map(hit => ({
+            ...hit,
+            url: hit.url.replace('https://reactjs.org/', '/') //To go to local repo
+          }));
+        }
       });
     } else {
       console.warn('Search has failed to load and now is being disabled');
