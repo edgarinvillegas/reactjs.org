@@ -15,7 +15,7 @@ redirect_from:
 
 Fundamentally, JSX just provides syntactic sugar for the `React.createElement(component, props, ...children)` function. The JSX code:
 
-```js
+```typescript
 <MyButton color="blue" shadowSize={2}>
   Click Me
 </MyButton>
@@ -23,7 +23,7 @@ Fundamentally, JSX just provides syntactic sugar for the `React.createElement(co
 
 compiles into:
 
-```js
+```typescript
 React.createElement(
   MyButton,
   {color: 'blue', shadowSize: 2},
@@ -33,13 +33,13 @@ React.createElement(
 
 You can also use the self-closing form of the tag if there are no children. So:
 
-```js
+```typescript
 <div className="sidebar" />
 ```
 
 compiles into:
 
-```js
+```typescript
 React.createElement(
   'div',
   {className: 'sidebar'},
@@ -61,11 +61,11 @@ Since JSX compiles into calls to `React.createElement`, the `React` library must
 
 For example, both of the imports are necessary in this code, even though `React` and `CustomButton` are not directly referenced from JavaScript:
 
-```js{1,2,5}
+```typescript{1,2,5}
 import React from 'react';
 import CustomButton from './CustomButton';
 
-function WarningButton() {
+const WarningButton: SFC<void> = function() {
   // return React.createElement(CustomButton, {color: 'red'}, null);
   return <CustomButton color="red" />;
 }
@@ -77,17 +77,17 @@ If you don't use a JavaScript bundler and loaded React from a `<script>` tag, it
 
 You can also refer to a React component using dot-notation from within JSX. This is convenient if you have a single module that exports many React components. For example, if `MyComponents.DatePicker` is a component, you can use it directly from JSX with:
 
-```js{10}
-import React from 'react';
+```typescript{10}
+import React, { SFC } from 'react';
 
-const MyComponents = {
-  DatePicker: function DatePicker(props) {
-    return <div>Imagine a {props.color} datepicker here.</div>;
-  }
+const MyComponents: { DatePicker: SFC<{ color: string }> } = {
+   DatePicker: function(props) {
+      return <div>Imagine a {props.color} datepicker here.</div>;
+   }
 }
 
 function BlueDatePicker() {
-  return <MyComponents.DatePicker color="blue" />;
+   return <MyComponents.DatePicker color="blue" />;
 }
 ```
 
@@ -99,33 +99,33 @@ We recommend naming components with a capital letter. If you do have a component
 
 For example, this code will not run as expected:
 
-```js{3,4,10,11}
-import React from 'react';
+```typescript{3,4,10,11}
+import React, { SFC } from 'react';
 
 // Wrong! This is a component and should have been capitalized:
-function hello(props) {
-  // Correct! This use of <div> is legitimate because div is a valid HTML tag:
-  return <div>Hello {props.toWhat}</div>;
+const hello: SFC<{ toWhat: string }> = function (props) {
+   // Correct! This use of <div> is legitimate because div is a valid HTML tag:
+   return <div>Hello {props.toWhat}</div>;
 }
 
-function HelloWorld() {
-  // Wrong! React thinks <hello /> is an HTML tag because it's not capitalized:
-  return <hello toWhat="World" />;
+const HelloWorld: SFC<void> = function() {
+   // Wrong! React thinks <hello /> is an HTML tag because it's not capitalized:
+   return <hello toWhat="World" />;
 }
 ```
 
 To fix this, we will rename `hello` to `Hello` and use `<Hello />` when referring to it:
 
-```js{3,4,10,11}
+```typescript{3,4,10,11}
 import React from 'react';
 
 // Correct! This is a component and should be capitalized:
-function Hello(props) {
-  // Correct! This use of <div> is legitimate because div is a valid HTML tag:
-  return <div>Hello {props.toWhat}</div>;
+const Hello: SFC<{ toWhat: string }> = function (props) {
+   // Correct! This use of <div> is legitimate because div is a valid HTML tag:
+   return <div>Hello {props.toWhat}</div>;
 }
 
-function HelloWorld() {
+const HelloWorld: SFC<void> = function() {
   // Correct! React knows <Hello /> is a component because it's capitalized.
   return <Hello toWhat="World" />;
 }
@@ -135,24 +135,25 @@ function HelloWorld() {
 
 You cannot use a general expression as the React element type. If you do want to use a general expression to indicate the type of the element, just assign it to a capitalized variable first. This often comes up when you want to render a different component based on a prop:
 
-```js{10,11}
-import React from 'react';
+```typescript{11,12}
+import React, { SFC } from 'react';
 import { PhotoStory, VideoStory } from './stories';
 
-const components = {
-  photo: PhotoStory,
-  video: VideoStory
+const components: {photo: PhotoStory, video: VideoStory} = {
+   photo: PhotoStory,
+   video: VideoStory
 };
 
-function Story(props) {
-  // Wrong! JSX type can't be an expression.
-  return <components[props.storyType] story={props.story} />;
+type PropType = { storyType: 'photo' | 'video', story: string };
+const Story: SFC<PropType> = function(props) {
+   // Wrong! JSX type can't be an expression.
+   return <components[props.storyType] story={props.story} />;
 }
 ```
 
 To fix this, we will assign the type to a capitalized variable first:
 
-```js{10-12}
+```js{11-13}
 import React from 'react';
 import { PhotoStory, VideoStory } from './stories';
 
@@ -161,7 +162,8 @@ const components = {
   video: VideoStory
 };
 
-function Story(props) {
+type PropType = { storyType: 'photo' | 'video', story: string };
+const Story: SFC<PropType> = function(props) {
   // Correct! JSX type can be a capitalized variable.
   const SpecificStory = components[props.storyType];
   return <SpecificStory story={props.story} />;
