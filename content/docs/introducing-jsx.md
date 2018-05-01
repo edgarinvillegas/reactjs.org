@@ -30,29 +30,34 @@ With that out of the way, let's get started!
 
 ### Embedding Expressions in JSX
 
-You can embed any [JavaScript expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#Expressions) in JSX by wrapping it in curly braces.
+You can embed any [TypeScript expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#Expressions) in JSX by wrapping it in curly braces.
 
 For example, `2 + 2`, `user.firstName`, and `formatName(user)` are all valid expressions:
 
-```js{12}
-function formatName(user) {
-  return user.firstName + ' ' + user.lastName;
+```typescript{17}
+interface User {
+   firstName: string,
+   lastName: string
 }
 
-const user = {
-  firstName: 'Harper',
-  lastName: 'Perez'
+function formatName(user: User): string {
+   return user.firstName + ' ' + user.lastName;
+}
+
+const user: User = {
+   firstName: 'Harper',
+   lastName: 'Perez'
 };
 
 const element = (
-  <h1>
-    Hello, {formatName(user)}!
-  </h1>
+   <h1>
+      Hello, {formatName(user)}!
+   </h1>
 );
 
 ReactDOM.render(
-  element,
-  document.getElementById('root')
+   element,
+   document.getElementById('root')
 );
 ```
 
@@ -66,9 +71,9 @@ After compilation, JSX expressions become regular JavaScript function calls and 
 
 This means that you can use JSX inside of `if` statements and `for` loops, assign it to variables, accept it as arguments, and return it from functions:
 
-```js{3,5}
-function getGreeting(user) {
-  if (user) {
+```typescript{3,5}
+function getGreeting(user: User) {
+  if (user.firstName) {
     return <h1>Hello, {formatName(user)}!</h1>;
   }
   return <h1>Hello, Stranger.</h1>;
@@ -79,13 +84,13 @@ function getGreeting(user) {
 
 You may use quotes to specify string literals as attributes:
 
-```js
+```typescript
 const element = <div tabIndex="0"></div>;
 ```
 
 You may also use curly braces to embed a JavaScript expression in an attribute:
 
-```js
+```typescript
 const element = <img src={user.avatarUrl}></img>;
 ```
 
@@ -101,13 +106,13 @@ Don't put quotes around curly braces when embedding a JavaScript expression in a
 
 If a tag is empty, you may close it immediately with `/>`, like XML:
 
-```js
+```typescript
 const element = <img src={user.avatarUrl} />;
 ```
 
 JSX tags may contain children:
 
-```js
+```typescript
 const element = (
   <div>
     <h1>Hello!</h1>
@@ -120,7 +125,7 @@ const element = (
 
 It is safe to embed user input in JSX:
 
-```js
+```typescript
 const title = response.potentiallyMaliciousInput;
 // This is safe:
 const element = <h1>{title}</h1>;
@@ -134,7 +139,7 @@ Babel compiles JSX down to `React.createElement()` calls.
 
 These two examples are identical:
 
-```js
+```typescript
 const element = (
   <h1 className="greeting">
     Hello, world!

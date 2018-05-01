@@ -13,7 +13,7 @@
     - id: hello-world
       title: Hello World (TS✓)
     - id: introducing-jsx
-      title: Introducing JSX (10%)
+      title: Introducing JSX (TS✓)
     - id: rendering-elements
       title: Rendering Elements
     - id: components-and-props
@@ -41,7 +41,7 @@
     - id: typechecking-with-proptypes
       title: Typechecking With PropTypes
     - id: static-type-checking
-      title: Static Type Checking
+      title: (N/A) Static Type Checking
     - id: refs-and-the-dom
       title: Refs and the DOM
     - id: uncontrolled-components
