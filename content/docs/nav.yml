@@ -37,7 +37,7 @@
 - title: Advanced Guides
   items:
     - id: jsx-in-depth
-      title: JSX In Depth (35%)
+      title: JSX In Depth (TS✓)
     - id: typechecking-with-proptypes
       title: Typechecking With PropTypes
     - id: static-type-checking
