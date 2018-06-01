@@ -78,6 +78,12 @@
       title: Code-Splitting
     - id: strict-mode
       title: Strict Mode
+- title: By Mojix - Redux
+  items:
+    - id: mojix-action-creators
+      title: Action creators
+    - id: mojix-connected-components
+      title: Connected components
 - title: Reference
   items:
     - id: react-api
