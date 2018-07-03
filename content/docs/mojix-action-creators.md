@@ -16,44 +16,42 @@ The following example will create an action like:
     payload: 'automationuser'
 }
 ```
+And another action like:
+```js
+{
+    type: 'SELECT_ENV_ACTION',
+    payload: 'qa1'
+}
+```
+
 
 (Having a payload field complies with the FSA (Flux Standard Action) standard.)
 
 To do this, we do 4 things:
 - Define a string constant
-- Define a payload type
-- Create the action
-- Export a dispatchable action
+- Create the action with createAction
+- Create the ActionsUnion (only useful for reducers)
 
 ```typescript
 // actions.ts
-import { createAction } from 'redux-actions';
+import { ActionsUnion, createAction } from 'lib/reduxHelpers';
 
 export const SET_USERNAME_ACTION = 'SET_USERNAME_ACTION';
-export type TSetUsernamePayload = string; // Because the payload is a string
+export const SELECT_ENV_ACTION = 'SELECT_ENV_ACTION';
 
-export const setUsernameAction = createAction(SET_USERNAME_ACTION, (username: string): TSetUsernamePayload => {
-   return username;
-});
+export const setUsernameAction = (username: string) => createAction(SET_USERNAME_ACTION, username);
+export const selectEnvAction = (env: string) => createAction(SELECT_ENV_ACTION, env);
 
-```
+export const Actions = {
+   setUsernameAction,
+   selectEnvAction
+};
 
-This `setUsernameAction` can be used in reducers created with redux-actions' `handleActions()`.
-
-Unfortunately, actions created by createAction lose parameter names when dispatched,
-that's why we re-export it with proper typing as `setUsernameOperation`:
-
-
-```typescript
-// operations.ts
-
-import { setUsernameAction, TSetUsernamePayload } from './actions';
-
-export const setUsernameOperation = setUsernameAction as (username: string) => IAction<TSetUsernamePayload>;
+export type Actions = ActionsUnion<typeof Actions>;
 
 ```
 
-Now this action aka 'operation' can be dispatched like `dispatch(setUsernameOperation('automationuser'))`
+It's straightforward to dispatch these actions: `dispatch(setUsernameAction('automationuser'))`
 
 
 ### Thunks
@@ -89,7 +87,7 @@ export function loginThunk(username: string, password: string): IThunkAction<Pro
          dispatch(setToken(response.token));  //Normal action dispatch
          return response;
       } catch (exc) {
-         dispatch(setLoginErrorOperation(exc.message));  //Normal action dispatch
+         dispatch(setLoginErrorAction(exc.message));  //Normal action dispatch
          throw exc;
       }
    };
