@@ -236,6 +236,7 @@ Example `connect` for this last case:
 function mergeProps(stateProps: IStateProps, { dispatch }: IThunkDispatchProp, ownProps: IOwnProps) {
    return {
       ...ownProps,
+      ...stateProps,
       logVisitedPage: () => dispatch(logVisitedPageAction(stateProps.username))
    };
 }
@@ -249,4 +250,4 @@ To get this `dispatch` argument, connect would look like:
 export default connect(undefined, (dispatch: IThunkDispatch) => ({ dispatch }), mergeProps)(HomeScene);
 ```
 
-(note mapDispatchToProps is returning the dispatch method).
+(note mapDispatchToProps is returning the dispatch method. TODO: evaluate if undefined is the same).
