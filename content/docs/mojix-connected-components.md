@@ -5,8 +5,55 @@ permalink: docs/mojix-connected-components.html
 prev: mojix-action-creators
 ---
 
-### With only dispatch prop (thunk and regular dispatch)
-TODO. The current patterns we have don't expose `dispatch` to the components.
+### With dispatch
+This is useful when you want to call `dispatch` inside the component.
+
+To achieve this,
+- Add `IThunkDispatchProp` to your props definition.
+`const MyComponent: SFC<IOwnProps & IThunkDispatchProp> = ...`.  This will allow to use
+This will allow props to have `dispatch`.
+
+- Call connect as usual. You are not forced to provide parameters to it. Remember that just calling `connect` allows to have `dispatch`.
+`connect()(MyComponent)`
+
+```typescript
+// PetPage.tsx
+
+import { connect } from 'react-redux';
+import { IThunkDispatchProp } from 'store/reduxTypes';
+
+interface IOwnProps {
+    name: string;
+}
+
+const PetPage: SFC<IOwnProps & IThunkDispatchProp> = (props) => {
+    const { name, dispatch } = props;
+
+    const handleClick = () => {
+        dispatch(trackVisitAction('Pet Page'));
+    };
+
+    const handlePersistClick = () => {
+        const timestamp = new Date().getTime();
+        dispatch(persistThunk(timestamp));
+    };
+
+    return (
+        <div>
+            <h1>{name}</h1>
+            <button onClick={handleTrackClick}> Track </button>
+            <button onClick={handlePersistClick} Persist </button>
+        </div>
+    );
+};
+
+// mapStateToProps always has this signature.
+
+export default connect()(PetPage);
+
+```
+
+*Note that we don't use this pattern currently* We use dispatch props one instead, keep reading.
 
 ### With state props (mapStateToProps)
 - Create IStateProps interface
@@ -45,6 +92,7 @@ function mapStateToProps(state: IStoreState, ownProps: IOwnProps): IStateProps {
 export default connect(mapStateToProps)(Team);
 
 ```
+
 
 ### With dispatch props (mapDispatchToProps)
 
@@ -110,7 +158,7 @@ but with a great power, comes a great responsibility.
 
 Steps:
 - Create interface `IMergeProps`. This can be called just `IProps`. This interface will have all the final props of the component.
-- Create `mapDispatchToProps` function. Its signature is:
+- Create `mergeProps` function. Its signature is:
 
  `(stateProps: IStateProps, dispatchProps: IDispatchProps, ownProps: IOwnProps) => IMergeProps`
 
@@ -118,7 +166,7 @@ This function will return the final props of the component. You're free to ignor
 
 - Send it as 3rd parameter of `connect`.
 
-- Component props will go just us `SFC<IMergeProps>`, no more `IOwnProps` or other types.
+- Component props will go just us `SFC<IMergeProps>`, no more `IOwnProps` or other types here.
 
 
 ```typescript
@@ -189,7 +237,7 @@ function mergeProps(stateProps: IStateProps, dispatchProps: IDispatchProps, ownP
       ...ownProps,
       ...stateProps,
       ...dispatchProps,
-      extra: stateProps.length > 0
+      extra: stateProps.errorMessage.length > 0
    };
 }
 
@@ -202,15 +250,15 @@ Note that mergeProps has all the control of the final props. In the last example
 ```typescript
 function mergeProps(stateProps: IStateProps, dispatchProps: IDispatchProps, ownProps: IOwnProps): IMergeProps {
    return {
-      extra: stateProps.length > 0
+      extra: stateProps.errorMessage.length > 0
    };
 }
 ```
 
 
-The interface would look like:
+The interface would look like just:
 ```typescript
-interface IMergeProps extends IDispatchProps & IStateProps & IOwnProps {
+interface IMergeProps {
     extra: boolean;
 }
 ```
@@ -247,7 +295,15 @@ In this example, mergeProps is also doing the usual job of `mapDispatchToProps`.
 To get this `dispatch` argument, connect would look like:
 
 ```
-export default connect(undefined, (dispatch: IThunkDispatch) => ({ dispatch }), mergeProps)(HomeScene);
+export default connect(mapStateToProps, (dispatch: IThunkDispatch) => ({ dispatch }), mergeProps)(HomeScene);
 ```
 
-(note mapDispatchToProps is returning the dispatch method. TODO: evaluate if undefined is the same).
+Shorter alternative way::
+
+```
+export default connect(mapStateToProps, undefined!, mergeProps)(HomeScene);
+```
+
+The bang operator (`!`) is just to please the ts compiler.
+
+(note mapDispatchToProps is returning the dispatch method. TODO: evaluate if undefined! is the same).
