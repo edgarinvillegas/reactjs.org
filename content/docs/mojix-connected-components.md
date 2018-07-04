@@ -8,7 +8,6 @@ prev: mojix-action-creators
 ### With only dispatch prop (thunk and regular dispatch)
 TODO. The current patterns we have don't expose `dispatch` to the components.
 
-
 ### With state props (mapStateToProps)
 - Create StateProps interface
 - mapStateToProps signature is:

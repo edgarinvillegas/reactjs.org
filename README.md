@@ -8,7 +8,7 @@ Exactly same format and structure as [reactjs.org](https://reactjs.org/)
 ### Prerequisites
 
 1. Git
-1. Node: install version 8.4 or greater
+1. Node: install version 8.4 or greater (There are known issues with Node 10)
 1. Yarn: See [Yarn website for installation instructions](https://yarnpkg.com/lang/en/docs/install/)
 1. A fork of the repo (for any contributions)
 1. A clone of the [react-docs-typescript repo](https://github.com/edgarinvillegas/react-docs-typescript) on your local machine
