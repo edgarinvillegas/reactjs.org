@@ -1,13 +1,11 @@
 ---
-id: mojix-action-creators
-title: Action creators
-permalink: docs/mojix-action-creators.html
-next: mojix-connected-components.html
+id: engage-action-creators
+title: Action creators & Reducers
+permalink: docs/engage-action-creators.html
+next: engage-connected-components.html
 ---
 
 ### Regular actions
-
-Creation with createAction (redux-actions library).
 
 The following example will create an action like:
 ```js
@@ -93,3 +91,50 @@ export function loginThunk(username: string, password: string): IThunkAction<Pro
    };
 }
 ```
+
+## Reducers
+
+Reducers are very straightforward after having created the action creators.
+
+- Create interface/type for the piece of state being reduced
+- Create reducer function of type `Reducer<StateType, ActionTypes>`,
+   It receives 2 parameters,  `state` and `action`.
+
+Consider the action creator example above. A reducer for these actions would be like:
+
+```typescript
+import { Reducer } from 'redux';
+
+import * as fromActions from './actions';       // Assume actions.ts from the example above
+
+interface ISessionState {
+   readonly loggedInUser: string;
+   readonly env: string;
+}
+
+const initialState: ISessionState = {
+  loggedInUser: '',
+  env: ''
+};
+
+const reducer: Reducer<ISessionState, fromActions.Actions> = (state = initialState, action) => {
+   switch (action.type) {
+      case fromActions.SET_USERNAME_ACTION: {
+         return {
+            ...state,
+            loggedInUser: action.payload  // This payload is a string, check setUsernameAction()
+         };
+      }
+      case fromActions.SELECT_ENV_ACTION: {     // We open braces so we can define local variables
+         const environment = action.payload; // Same, Check selectEnvAction() definition
+         return { ...state, env: environment };
+      }
+      default:
+         return initialState;
+   }
+};
+
+export default reducer;
+```
+
+Note that in the example, `action.payload` is a string, but it can actually be whatever you want.

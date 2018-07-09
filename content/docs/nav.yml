@@ -15,9 +15,9 @@
     - id: introducing-jsx
       title: Introducing JSX (TS✓)
     - id: rendering-elements
-      title: Rendering Elements
+      title: Rendering Elements (TS✓)
     - id: components-and-props
-      title: Components and Props
+      title: Components and Props (TS✓ 95%)
     - id: state-and-lifecycle
       title: State and Lifecycle
     - id: handling-events
@@ -78,11 +78,11 @@
       title: Code-Splitting
     - id: strict-mode
       title: Strict Mode
-- title: By Mojix - Redux
+- title: Redux (Engage)
   items:
-    - id: mojix-action-creators
-      title: Action creators
-    - id: mojix-connected-components
+    - id: engage-action-creators
+      title: Action creators & Reducers
+    - id: engage-connected-components
       title: Connected components
 - title: Reference
   items:

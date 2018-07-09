@@ -1,8 +1,8 @@
 ---
-id: mojix-connected-components
+id: engage-connected-components
 title: Connected components
-permalink: docs/mojix-connected-components.html
-prev: mojix-action-creators
+permalink: docs/engage-connected-components.html
+prev: engage-action-creators
 ---
 
 ### With dispatch
