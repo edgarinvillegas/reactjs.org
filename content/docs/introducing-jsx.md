@@ -107,13 +107,13 @@ Don't put quotes around curly braces when embedding a JavaScript expression in a
 If a tag is empty, you may close it immediately with `/>`, like XML:
 
 ```typescript
-const element = <img src={user.avatarUrl} />;
+const element: JSX.Element = <img src={user.avatarUrl} />;
 ```
 
 JSX tags may contain children:
 
 ```typescript
-const element = (
+const element: JSX.Element = (
   <div>
     <h1>Hello!</h1>
     <h2>Good to see you here.</h2>
@@ -128,7 +128,7 @@ It is safe to embed user input in JSX:
 ```typescript
 const title = response.potentiallyMaliciousInput;
 // This is safe:
-const element = <h1>{title}</h1>;
+const element: JSX.Element = <h1>{title}</h1>;
 ```
 
 By default, React DOM [escapes](http://stackoverflow.com/questions/7381974/which-characters-need-to-be-escaped-on-html) any values embedded in JSX before rendering them. Thus it ensures that you can never inject anything that's not explicitly written in your application. Everything is converted to a string before being rendered. This helps prevent [XSS (cross-site-scripting)](https://en.wikipedia.org/wiki/Cross-site_scripting) attacks.
@@ -140,7 +140,7 @@ Babel compiles JSX down to `React.createElement()` calls.
 These two examples are identical:
 
 ```typescript
-const element = (
+const element: JSX.Element = (
   <h1 className="greeting">
     Hello, world!
   </h1>
@@ -148,7 +148,7 @@ const element = (
 ```
 
 ```js
-const element = React.createElement(
+const element: JSX.Element = React.createElement(
   'h1',
   {className: 'greeting'},
   'Hello, world!'
