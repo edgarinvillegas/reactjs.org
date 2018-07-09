@@ -7,15 +7,18 @@ prev: components-and-props.html
 next: handling-events.html
 ---
 
+_(Typescript TODO: All has been translated, except external CodePen examples)_
+
+
 Consider the ticking clock example from [one of the previous sections](/docs/rendering-elements.html#updating-the-rendered-element).
 
 So far we have only learned one way to update the UI.
 
 We call `ReactDOM.render()` to change the rendered output:
 
-```js{8-11}
+```typescript{8-11}
 function tick() {
-  const element = (
+  const element: JSX.Element = (
     <div>
       <h1>Hello, world!</h1>
       <h2>It is {new Date().toLocaleTimeString()}.</h2>
@@ -30,14 +33,16 @@ function tick() {
 setInterval(tick, 1000);
 ```
 
-[Try it on CodePen.](http://codepen.io/gaearon/pen/gwoJZk?editors=0010)
+[Try JS version on CodePen.](http://codepen.io/gaearon/pen/gwoJZk?editors=0010)
 
 In this section, we will learn how to make the `Clock` component truly reusable and encapsulated. It will set up its own timer and update itself every second.
 
 We can start by encapsulating how the clock looks:
 
-```js{3-6,12}
-function Clock(props) {
+```typescript{5-8,14}
+type TClockProps = { date: Date };
+
+const Clock: React.SFC<TClockProps> = (props) => {
   return (
     <div>
       <h1>Hello, world!</h1>
@@ -56,13 +61,13 @@ function tick() {
 setInterval(tick, 1000);
 ```
 
-[Try it on CodePen.](http://codepen.io/gaearon/pen/dpdoYR?editors=0010)
+[Try JS version on CodePen.](http://codepen.io/gaearon/pen/dpdoYR?editors=0010)
 
 However, it misses a crucial requirement: the fact that the `Clock` sets up a timer and updates the UI every second should be an implementation detail of the `Clock`.
 
 Ideally we want to write this once and have the `Clock` update itself:
 
-```js{2}
+```typescript{2}
 ReactDOM.render(
   <Clock />,
   document.getElementById('root')
@@ -79,9 +84,9 @@ We [mentioned before](/docs/components-and-props.html#functional-and-class-compo
 
 You can convert a functional component like `Clock` to a class in five steps:
 
-1. Create an [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes), with the same name, that extends `React.Component`.
+1. Create a TypeScript class [(ES6 class refresher)](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes), with the same name, that extends `React.Component`.
 
-2. Add a single empty method to it called `render()`.
+2. Add a single empty public method to it called `render()`.
 
 3. Move the body of the function into the `render()` method.
 
@@ -89,9 +94,11 @@ You can convert a functional component like `Clock` to a class in five steps:
 
 5. Delete the remaining empty function declaration.
 
-```js
-class Clock extends React.Component {
-  render() {
+```typescript
+type TClockProps = { date: Date };
+
+class Clock extends React.Component<TClockProps> {
+  public render() {
     return (
       <div>
         <h1>Hello, world!</h1>
@@ -102,7 +109,7 @@ class Clock extends React.Component {
 }
 ```
 
-[Try it on CodePen.](http://codepen.io/gaearon/pen/zKRGpo?editors=0010)
+[Try JS version on CodePen.](http://codepen.io/gaearon/pen/zKRGpo?editors=0010)
 
 `Clock` is now defined as a class rather than a function.
 
@@ -112,11 +119,15 @@ This lets us use additional features such as local state and lifecycle hooks.
 
 We will move the `date` from props to state in three steps:
 
-1) Replace `this.props.date` with `this.state.date` in the `render()` method:
+1) Create a type (or interface) for the state, and supply it as second generic argument to React.Component
+Replace `this.props.date` with `this.state.date` in the `render()` method:
 
-```js{6}
-class Clock extends React.Component {
-  render() {
+```typescript{1,2,4,9}
+type TClockProps = {};   // date is not a prop anymore
+type TClockState = { date: Date };
+
+class Clock extends React.Component<TClockProps, TClockState> {
+  public render() {
     return (
       <div>
         <h1>Hello, world!</h1>
@@ -127,16 +138,18 @@ class Clock extends React.Component {
 }
 ```
 
-2) Add a [class constructor](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes#Constructor) that assigns the initial `this.state`:
+2) Create a `state` public field of that type, with the initial value
 
-```js{4}
-class Clock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
+```typescript{5-7}
+type TClockProps = {};
+type TClockState = { date: Date };
+
+class Clock extends React.Component<TClockProps, TClockState> {
+  public state = {
+    date: new Date()
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <h1>Hello, world!</h1>
@@ -146,21 +159,10 @@ class Clock extends React.Component {
   }
 }
 ```
-
-Note how we pass `props` to the base constructor:
-
-```js{2}
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
-  }
-```
-
-Class components should always call the base constructor with `props`.
 
 3) Remove the `date` prop from the `<Clock />` element:
 
-```js{2}
+```typescript{2}
 ReactDOM.render(
   <Clock />,
   document.getElementById('root')
@@ -171,21 +173,23 @@ We will later add the timer code back to the component itself.
 
 The result looks like this:
 
-```js{2-5,11,18}
-class Clock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
-  }
+```typescript{2,4-7,13,20}
+type TClockProps = {};
+type TClockState = { date: Date };
 
-  render() {
-    return (
-      <div>
-        <h1>Hello, world!</h1>
-        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
-      </div>
-    );
-  }
+class Clock extends React.Component<TClockProps, TClockState> {
+ public state = {
+   date: new Date()
+ }
+
+ public render() {
+   return (
+     <div>
+       <h1>Hello, world!</h1>
+       <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+     </div>
+   );
+ }
 }
 
 ReactDOM.render(
@@ -208,22 +212,24 @@ We also want to [clear that timer](https://developer.mozilla.org/en-US/docs/Web/
 
 We can declare special methods on the component class to run some code when a component mounts and unmounts:
 
-```js{7-9,11-13}
-class Clock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
+```typescript{9-11,13-15}
+type TClockProps = {};
+type TClockState = { date: Date };
+
+class Clock extends React.Component<TClockProps, TClockState> {
+  public state = {
+    date: new Date()
   }
 
-  componentDidMount() {
+  public componentDidMount() {
 
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
 
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <h1>Hello, world!</h1>
@@ -238,8 +244,8 @@ These methods are called "lifecycle hooks".
 
 The `componentDidMount()` hook runs after the component output has been rendered to the DOM. This is a good place to set up a timer:
 
-```js{2-5}
-  componentDidMount() {
+```typescript{2-5}
+  public componentDidMount() {
     this.timerID = setInterval(
       () => this.tick(),
       1000
@@ -247,14 +253,14 @@ The `componentDidMount()` hook runs after the component output has been rendered
   }
 ```
 
-Note how we save the timer ID right on `this`.
+Note how we save the timer ID right on `this`. We will declare `timerID` and `tick() soon.
 
 While `this.props` is set up by React itself and `this.state` has a special meaning, you are free to add additional fields to the class manually if you need to store something that doesn’t participate in the data flow (like a timer ID).
 
 We will tear down the timer in the `componentWillUnmount()` lifecycle hook:
 
-```js{2}
-  componentWillUnmount() {
+```typescript{2}
+  public componentWillUnmount() {
     clearInterval(this.timerID);
   }
 ```
@@ -263,38 +269,42 @@ Finally, we will implement a method called `tick()` that the `Clock` component w
 
 It will use `this.setState()` to schedule updates to the component local state:
 
-```js{18-22}
-class Clock extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {date: new Date()};
-  }
+```typescript{9,22-26}
+type TClockProps = {};
+type TClockState = { date: Date };
 
-  componentDidMount() {
-    this.timerID = setInterval(
-      () => this.tick(),
-      1000
-    );
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  tick() {
-    this.setState({
+class Clock extends React.Component<TClockProps, TClockState> {
+   public state = {
       date: new Date()
-    });
-  }
+   };
 
-  render() {
-    return (
-      <div>
-        <h1>Hello, world!</h1>
-        <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
-      </div>
-    );
-  }
+   private timerID: number;
+
+   public componentDidMount() {
+      this.timerID = setInterval(
+         () => this.tick(),
+         1000
+      );
+   }
+
+   public componentWillUnmount() {
+      clearInterval(this.timerID);
+   }
+
+   private tick() {
+      this.setState({
+         date: new Date()
+      });
+   }
+
+   public render() {
+      return (
+         <div>
+            <h1>Hello, world!</h1>
+            <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+         </div>
+      );
+   }
 }
 
 ReactDOM.render(
@@ -303,7 +313,7 @@ ReactDOM.render(
 );
 ```
 
-[Try it on CodePen.](http://codepen.io/gaearon/pen/amqdNA?editors=0010)
+[Try JS version on CodePen.](http://codepen.io/gaearon/pen/amqdNA?editors=0010)
 
 Now the clock ticks every second.
 
@@ -327,14 +337,14 @@ There are three things you should know about `setState()`.
 
 For example, this will not re-render a component:
 
-```js
+```typescript
 // Wrong
 this.state.comment = 'Hello';
 ```
 
 Instead, use `setState()`:
 
-```js
+```typescript
 // Correct
 this.setState({comment: 'Hello'});
 ```
@@ -349,7 +359,7 @@ Because `this.props` and `this.state` may be updated asynchronously, you should 
 
 For example, this code may fail to update the counter:
 
-```js
+```typescript
 // Wrong
 this.setState({
   counter: this.state.counter + this.props.increment,
@@ -358,7 +368,7 @@ this.setState({
 
 To fix it, use a second form of `setState()` that accepts a function rather than an object. That function will receive the previous state as the first argument, and the props at the time the update is applied as the second argument:
 
-```js
+```typescript
 // Correct
 this.setState((prevState, props) => ({
   counter: prevState.counter + props.increment
@@ -367,9 +377,9 @@ this.setState((prevState, props) => ({
 
 We used an [arrow function](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/Arrow_functions) above, but it also works with regular functions:
 
-```js
+```typescript
 // Correct
-this.setState(function(prevState, props) {
+this.setState((prevState, props) => {
   return {
     counter: prevState.counter + props.increment
   };
@@ -382,20 +392,17 @@ When you call `setState()`, React merges the object you provide into the current
 
 For example, your state may contain several independent variables:
 
-```js{4,5}
-  constructor(props) {
-    super(props);
-    this.state = {
-      posts: [],
-      comments: []
-    };
-  }
+```typescript{2,3}
+  public state = {
+    posts: [],
+    comments: []
+  };
 ```
 
 Then you can update them independently with separate `setState()` calls:
 
-```js{4,10}
-  componentDidMount() {
+```typescript{4,10}
+  public componentDidMount() {
     fetchPosts().then(response => {
       this.setState({
         posts: response.posts
@@ -420,25 +427,25 @@ This is why state is often called local or encapsulated. It is not accessible to
 
 A component may choose to pass its state down as props to its child components:
 
-```js
+```typescript
 <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
 ```
 
 This also works for user-defined components:
 
-```js
+```typescript
 <FormattedDate date={this.state.date} />
 ```
 
 The `FormattedDate` component would receive the `date` in its props and wouldn't know whether it came from the `Clock`'s state, from the `Clock`'s props, or was typed by hand:
 
-```js
-function FormattedDate(props) {
+```typescript
+const FormattedDate: React.SFC<{date: Date}> = (props) => {
   return <h2>It is {props.date.toLocaleTimeString()}.</h2>;
 }
 ```
 
-[Try it on CodePen.](http://codepen.io/gaearon/pen/zKRqNB?editors=0010)
+[Try JS version on CodePen.](http://codepen.io/gaearon/pen/zKRqNB?editors=0010)
 
 This is commonly called a "top-down" or "unidirectional" data flow. Any state is always owned by some specific component, and any data or UI derived from that state can only affect components "below" them in the tree.
 
@@ -446,8 +453,8 @@ If you imagine a component tree as a waterfall of props, each component's state 
 
 To show that all components are truly isolated, we can create an `App` component that renders three `<Clock>`s:
 
-```js{4-6}
-function App() {
+```typescript{4-6}
+const App: React.SFC<{}> = () => {
   return (
     <div>
       <Clock />
@@ -463,7 +470,7 @@ ReactDOM.render(
 );
 ```
 
-[Try it on CodePen.](http://codepen.io/gaearon/pen/vXdGmd?editors=0010)
+[Try JS version on CodePen.](http://codepen.io/gaearon/pen/vXdGmd?editors=0010)
 
 Each `Clock` sets up its own timer and updates independently.
 
