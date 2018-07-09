@@ -16,31 +16,41 @@ prev: rendering-elements.html
 next: state-and-lifecycle.html
 ---
 
+_(Typescript TODO: All has been translated, except external CodePen examples)_
+
+
 Components let you split the UI into independent, reusable pieces, and think about each piece in isolation.
 
 Conceptually, components are like JavaScript functions. They accept arbitrary inputs (called "props") and return React elements describing what should appear on the screen.
 
 ## Functional and Class Components
 
-The simplest way to define a component is to write a JavaScript function:
+The simplest way to define a component is to write a TypeScript function:
 
-```js
-function Welcome(props) {
+```typescript
+type TProps = {name: string};
+
+const Welcome: React.SFC<TProps> = (props) => {
   return <h1>Hello, {props.name}</h1>;
 }
 ```
 
-This function is a valid React component because it accepts a single "props" (which stands for properties) object argument with data and returns a React element. We call such components "functional" because they are literally JavaScript functions.
+This function is a valid React component because it accepts a single "props" (which stands for properties) object argument with data and returns a React element. We call such components "functional" because they are literally functions.
 
-You can also use an [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) to define a component:
+You can also use a class to define a component:
 
-```js
-class Welcome extends React.Component {
-  render() {
+
+```typescript
+type TProps = {name: string};
+
+class Welcome extends React.Component<TProps> {
+  public render() {
     return <h1>Hello, {this.props.name}</h1>;
   }
 }
 ```
+
+(You can check [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) for a JS class refresher)
 
 The above two components are equivalent from React's point of view.
 
@@ -50,33 +60,33 @@ Classes have some additional features that we will discuss in the [next sections
 
 Previously, we only encountered React elements that represent DOM tags:
 
-```js
-const element = <div />;
+```typescript
+const element: JSX.Element = <div />;
 ```
 
 However, elements can also represent user-defined components:
 
-```js
-const element = <Welcome name="Sara" />;
+```typescript
+const element: JSX.Element = <Welcome name="Sara" />;
 ```
 
 When React sees an element representing a user-defined component, it passes JSX attributes to this component as a single object. We call this object "props".
 
 For example, this code renders "Hello, Sara" on the page:
 
-```js{1,5}
-function Welcome(props) {
-  return <h1>Hello, {props.name}</h1>;
-}
+```typescript{1,5}
+const Welcome: React.SFC<TProps> = props => {
+   return <h1>Hello, {props.name}</h1>;
+};
 
-const element = <Welcome name="Sara" />;
+const element: JSX.Element = <Welcome name="Sara" />;
 ReactDOM.render(
   element,
   document.getElementById('root')
 );
 ```
 
-[](codepen://components-and-props/rendering-a-component).
+[Try JS version on CodePen](codepen://components-and-props/rendering-a-component).
 
 Let's recap what happens in this example:
 
@@ -97,12 +107,12 @@ Components can refer to other components in their output. This lets us use the s
 
 For example, we can create an `App` component that renders `Welcome` many times:
 
-```js{8-10}
-function Welcome(props) {
+```typescript{8-10}
+const Welcome: React.SFC<TProps> = (props) => {
   return <h1>Hello, {props.name}</h1>;
 }
 
-function App() {
+const App: React.SFC<{}> = () => {
   return (
     <div>
       <Welcome name="Sara" />
@@ -118,7 +128,7 @@ ReactDOM.render(
 );
 ```
 
-[](codepen://components-and-props/composing-components).
+[Try JS version on CodePen](codepen://components-and-props/composing-components).
 
 Typically, new React apps have a single `App` component at the very top. However, if you integrate React into an existing app, you might start bottom-up with a small component like `Button` and gradually work your way to the top of the view hierarchy.
 
@@ -128,31 +138,30 @@ Don't be afraid to split components into smaller components.
 
 For example, consider this `Comment` component:
 
-```js
-function Comment(props) {
-  return (
-    <div className="Comment">
-      <div className="UserInfo">
-        <img className="Avatar"
-          src={props.author.avatarUrl}
-          alt={props.author.name}
-        />
-        <div className="UserInfo-name">
-          {props.author.name}
-        </div>
+```typescript
+type TCommentProps = {
+   author: {
+      avatarUrl: string;
+      name: string;
+   };
+   text: string;
+   date: Date;
+};
+const Comment: React.SFC<TCommentProps> = props => {
+   return (
+      <div className="Comment">
+         <div className="UserInfo">
+            <img className="Avatar" src={props.author.avatarUrl} alt={props.author.name} />
+            <div className="UserInfo-name">{props.author.name}</div>
+         </div>
+         <div className="Comment-text">{props.text}</div>
+         <div className="Comment-date">{formatDate(props.date)}</div>
       </div>
-      <div className="Comment-text">
-        {props.text}
-      </div>
-      <div className="Comment-date">
-        {formatDate(props.date)}
-      </div>
-    </div>
-  );
-}
+   );
+};
 ```
 
-[](codepen://components-and-props/extracting-components).
+[Try JS version on CodePen](codepen://components-and-props/extracting-components).
 
 It accepts `author` (an object), `text` (a string), and `date` (a date) as props, and describes a comment on a social media website.
 
@@ -160,15 +169,17 @@ This component can be tricky to change because of all the nesting, and it is als
 
 First, we will extract `Avatar`:
 
-```js{3-6}
-function Avatar(props) {
-  return (
-    <img className="Avatar"
-      src={props.user.avatarUrl}
-      alt={props.user.name}
-    />
-  );
-}
+```typescript{4-8}
+type TAvatarProps = { user: { avatarUrl: string; name: string; } };
+const Avatar: React.SFC<TAvatarProps> = props => {
+   return (
+      <img
+         className="Avatar"
+         src={props.user.avatarUrl}
+         alt={props.user.name}
+      />
+   );
+};
 ```
 
 The `Avatar` doesn't need to know that it is being rendered inside a `Comment`. This is why we have given its prop a more generic name: `user` rather than `author`.
@@ -177,61 +188,62 @@ We recommend naming props from the component's own point of view rather than the
 
 We can now simplify `Comment` a tiny bit:
 
-```js{5}
-function Comment(props) {
-  return (
-    <div className="Comment">
-      <div className="UserInfo">
-        <Avatar user={props.author} />
-        <div className="UserInfo-name">
-          {props.author.name}
-        </div>
+```typescript{5}
+const Comment: React.SFC<TCommentProps> = (props) => {
+   return (
+      <div className="Comment">
+         <div className="UserInfo">
+            <Avatar user={props.author} />
+            <div className="UserInfo-name">
+               {props.author.name}
+            </div>
+         </div>
+         <div className="Comment-text">
+            {props.text}
+         </div>
+         <div className="Comment-date">
+            {formatDate(props.date)}
+         </div>
       </div>
-      <div className="Comment-text">
-        {props.text}
-      </div>
-      <div className="Comment-date">
-        {formatDate(props.date)}
-      </div>
-    </div>
-  );
+   );
 }
 ```
 
 Next, we will extract a `UserInfo` component that renders an `Avatar` next to the user's name:
 
-```js{3-8}
-function UserInfo(props) {
-  return (
-    <div className="UserInfo">
-      <Avatar user={props.user} />
-      <div className="UserInfo-name">
-        {props.user.name}
+```typescript{4-9}
+type TUserProps = { user: { avatarUrl: string; name: string; } };
+const UserInfo: React.SFC<TUserProps> = (props) => {
+   return (
+      <div className="UserInfo">
+         <Avatar user={props.user} />
+         <div className="UserInfo-name">
+            {props.user.name}
+         </div>
       </div>
-    </div>
-  );
+   );
 }
 ```
 
 This lets us simplify `Comment` even further:
 
-```js{4}
-function Comment(props) {
-  return (
-    <div className="Comment">
-      <UserInfo user={props.author} />
-      <div className="Comment-text">
-        {props.text}
+```typescript{4}
+const Comment: React.SFC<TCommentProps> = (props) => {
+   return (
+      <div className="Comment">
+         <UserInfo user={props.author} />
+         <div className="Comment-text">
+            {props.text}
+         </div>
+         <div className="Comment-date">
+            {formatDate(props.date)}
+         </div>
       </div>
-      <div className="Comment-date">
-        {formatDate(props.date)}
-      </div>
-    </div>
-  );
+   );
 }
 ```
 
-[](codepen://components-and-props/extracting-components-continued).
+[Try JS version on CodePen](codepen://components-and-props/extracting-components-continued).
 
 Extracting components might seem like grunt work at first, but having a palette of reusable components pays off in larger apps. A good rule of thumb is that if a part of your UI is used several times (`Button`, `Panel`, `Avatar`), or is complex enough on its own (`App`, `FeedStory`, `Comment`), it is a good candidate to be a reusable component.
 
@@ -239,8 +251,8 @@ Extracting components might seem like grunt work at first, but having a palette 
 
 Whether you declare a component [as a function or a class](#functional-and-class-components), it must never modify its own props. Consider this `sum` function:
 
-```js
-function sum(a, b) {
+```typescript
+function sum(a: number, b: number) {
   return a + b;
 }
 ```
