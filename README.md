@@ -68,7 +68,7 @@ If you get an error related with gatsby during installation, follow these steps:
   - Execute `npm install --global --production windows-build-tools`
   - Wait until it finishes and retry `yarn`
 
-#### Debian
+#### Linux
 
 "Error while loading shared libraries: libpng12.so.0: cannot open shared object file: No such file or directory"
 
