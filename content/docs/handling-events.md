@@ -8,8 +8,6 @@ redirect_from:
   - "docs/events-ko-KR.html"
 ---
 
-_(Typescript TODO: All has been translated, except external CodePen examples)_
-
 Handling events with React elements is very similar to handling events on DOM elements. There are some syntactic differences:
 
 * React events are named using camelCase, rather than lowercase.
@@ -62,11 +60,12 @@ When using React you should generally not need to call `addEventListener` to add
 
 When you define a component using an [ES6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes), a common pattern is for an event handler to be a method on the class. For example, this `Toggle` component renders a button that lets the user toggle between "ON" and "OFF" states:
 
-```typescript{6,7,10-14,18}
+```js{6,7,10-14,18}
 class Toggle extends React.Component {
   constructor(props) {
     super(props);
     this.state = {isToggleOn: true};
+
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
   }
@@ -100,7 +99,7 @@ This is not React-specific behavior; it is a part of [how functions work in Java
 
 If calling `bind` annoys you, there are two ways you can get around this. If you are using the experimental [public class fields syntax](https://babeljs.io/docs/plugins/transform-class-properties/), you can use class fields to correctly bind callbacks:
 
-```typescript{2-6}
+```js{2-6}
 class LoggingButton extends React.Component {
   // This syntax ensures `this` is bound within handleClick.
   // Warning: this is *experimental* syntax.
@@ -122,7 +121,7 @@ This syntax is enabled by default in [Create React App](https://github.com/faceb
 
 If you aren't using class fields syntax, you can use an [arrow function](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Functions/Arrow_functions) in the callback:
 
-```typescript{7-9}
+```js{7-9}
 class LoggingButton extends React.Component {
   handleClick() {
     console.log('this is:', this);
