@@ -21,7 +21,7 @@
     - id: state-and-lifecycle
       title: State and Lifecycle (TS✓)
     - id: handling-events
-      title: Handling Events
+      title: Handling Events (TS 70%)
     - id: conditional-rendering
       title: Conditional Rendering
     - id: lists-and-keys
