@@ -21,9 +21,9 @@ For example, the HTML:
 </button>
 ```
 
-is slightly different in React with Typescript:
+is slightly different in React:
 
-```typescript{1}
+```js{1}
 <button onClick={activateLasers}>
   Activate Lasers
 </button>
@@ -39,7 +39,7 @@ Another difference is that you cannot return `false` to prevent default behavior
 
 In React, this could instead be:
 
-```typescript{2-5,8}
+```js{2-5,8}
 function ActionLink() {
   function handleClick(e) {
     e.preventDefault();
