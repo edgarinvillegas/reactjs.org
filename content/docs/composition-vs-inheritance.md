@@ -7,6 +7,8 @@ prev: lifting-state-up.html
 next: thinking-in-react.html
 ---
 
+_(Typescript TODO: All has been translated, except external CodePen examples)_
+
 React has a powerful composition model, and we recommend using composition instead of inheritance to reuse code between components.
 
 In this section, we will consider a few problems where developers new to React often reach for inheritance, and show how we can solve them with composition.
@@ -17,7 +19,7 @@ Some components don't know their children ahead of time. This is especially comm
 
 We recommend that such components use the special `children` prop to pass children elements directly into their output:
 
-```js{4}
+```typescript{4}
 function FancyBorder(props) {
   return (
     <div className={'FancyBorder FancyBorder-' + props.color}>
@@ -27,9 +29,9 @@ function FancyBorder(props) {
 }
 ```
 
-This lets other components pass arbitrary children to them by nesting the JSX:
+This lets other components pass arbitrary children to them by nesting the TS:
 
-```js{4-9}
+```typescript{4-9}
 function WelcomeDialog() {
   return (
     <FancyBorder color="blue">
@@ -46,11 +48,11 @@ function WelcomeDialog() {
 
 [Try it on CodePen.](https://codepen.io/gaearon/pen/ozqNOV?editors=0010)
 
-Anything inside the `<FancyBorder>` JSX tag gets passed into the `FancyBorder` component as a `children` prop. Since `FancyBorder` renders `{props.children}` inside a `<div>`, the passed elements appear in the final output.
+Anything inside the `<FancyBorder>` TS tag gets passed into the `FancyBorder` component as a `children` prop. Since `FancyBorder` renders `{props.children}` inside a `<div>`, the passed elements appear in the final output.
 
 While this is less common, sometimes you might need multiple "holes" in a component. In such cases you may come up with your own convention instead of using `children`:
 
-```js{5,8,18,21}
+```typescript{5,8,18,21}
 function SplitPane(props) {
   return (
     <div className="SplitPane">
@@ -87,7 +89,7 @@ Sometimes we think about components as being "special cases" of other components
 
 In React, this is also achieved by composition, where a more "specific" component renders a more "generic" one and configures it with props:
 
-```js{5,8,16-18}
+```typescript{5,8,16-18}
 function Dialog(props) {
   return (
     <FancyBorder color="blue">
@@ -114,7 +116,7 @@ function WelcomeDialog() {
 
 Composition works equally well for components defined as classes:
 
-```js{10,27-31}
+```typescript{10,27-31}
 function Dialog(props) {
   return (
     <FancyBorder color="blue">
